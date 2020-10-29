@@ -1,33 +1,89 @@
-# Imports:
-
+# Imports
 from selenium import webdriver
+import bs4 as bs
 import time
+from selenium import webdriver   # for webdriver
+from selenium.webdriver.support.ui import WebDriverWait  # for implicit and explict waits
+from selenium.webdriver.chrome.options import Options  # for suppressing the browser
 
-# Path to Chrome Driver
+# Replacing the login.passwords with the personal ProtonMail Account
+mailAccount = "";
+passwordAccount = "";
 
-browser = webdriver.Chrome("C:\Program Files\chromedriver\chromedriver.exe")
+# Opening the file and reading the login and password to the declared variable
+with open("login.passwords", "r") as loginpass:
+    theUserInput = loginpass.read().split(";")
+    mailAccount = theUserInput[0]
+    passwordAccount = theUserInput[1]
 
-# Getting into Typings.gg
+# Reading the chromedriver path
+option = webdriver.ChromeOptions()
+option.add_argument('headless')
 
-url="https://typings.gg"
+browser = webdriver.Chrome("C:\Program Files\chromedriver\chromedriver.exe", options=option)
+
+# Opening the website
+url = "https://protonmail.com/login"
 browser.get(url)
-
-# The total word count:
-
-theButton = browser.find_element_by_xpath("//*[@id='wc-250']")
-theButton.click()
 
 time.sleep(1)
 
-# Writing the Founded Words:
+# Login field Xpath Declaration and inputting the mail
+protonMailLoginInput = browser.find_element_by_xpath("//*[@id='username']")
+protonMailLoginInput.send_keys(mailAccount)
 
-input_field = browser.find_element_by_xpath("//*[@id='input-field']")
+# Password field Xpath Declaration and inputting the password
+protonMailPasswordInput = browser.find_element_by_xpath("//*[@id='password']")
+protonMailPasswordInput.send_keys(passwordAccount)
 
-# Find Words Here:
-i = 1
-while i < 251:
-    current_word_xpath = browser.find_element_by_xpath("//*[@id='text-display']/span["+str(i)+"]")
-    current_word = current_word_xpath.text
-    input_field.send_keys(current_word+" ")
-    #time.sleep(0.15) #COMMENT FOR TURBO MODE
-    i += 1
+# Entering the mail account
+protonMailLoginButton = browser.find_element_by_xpath("//*[@id='login_btn']")
+protonMailLoginButton.click()
+
+time.sleep(4)
+
+# Update Mail Button
+updateMailButton = browser.find_element_by_xpath("//*[@id='pm_sidebar']/ul[1]/li[8]/a")
+
+# Moving to the All Mail Section
+updateMailButton.click()
+time.sleep(1)
+
+# Latest Mail Title
+latestMailPath = browser.find_element_by_xpath("//*[@id='conversation-list-columns']/section/div[1]/div[2]/div[1]/h4/span[2]").text
+#print(latestMailPath)
+
+# Mail Time Xpath
+mailTimeX = browser.find_element_by_xpath("//*[@id='conversation-list-columns']/section/div[1]/div[2]/div[1]/span/time").text
+
+ddosAndTime = []
+print("DDOSed! FAST FAST RECOVER UR ASS!")
+ddosAndTime.append(mailTimeX)
+print(ddosAndTime)
+
+# Mail sender name:
+mailSenderNameX = browser.find_element_by_xpath("//*[@id='conversation-list-columns']/section/div[1]/div[2]/div[2]/span/span").text
+print(mailSenderNameX)
+mailSendersName = []
+mailSendersName.append(mailSenderNameX)
+#print(mailSenderNameX)
+
+while True:
+    updateMailButton.click()
+    time.sleep(1)
+
+    if latestMailPath.lower() == "ddos":
+        mailTimeX = browser.find_element_by_xpath("//*[@id='conversation-list-columns']/section/div[1]/div[2]/div[1]/span/time").text
+        mailSenderNameX = browser.find_element_by_xpath("//*[@id='conversation-list-columns']/section/div[1]/div[2]/div[2]/span/span").text
+        time.sleep(0.5)
+        if mailTimeX not in ddosAndTime:
+            print("DDOSed! FAST FAST RECOVER UR ASS!")
+            ddosAndTime.append(mailTimeX)
+            mailSendersName.append(mailTimeX)
+
+    print("DDOS included mail was sent at ", ddosAndTime)
+    print("Mail was sent by ", mailSendersName)
+
+    #print(latestMailPath)
+    time.sleep(5)
+
